@@ -1,4 +1,4 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.entities;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -8,18 +8,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *
  * @author code test administrator
  */
-public class AirportData {
+public class Airport {
 
     /** the three letter IATA code */
-    String iata;
+    private String iata;
 
     /** latitude value in degrees */
-    double latitude;
+    private double latitude;
 
     /** longitude value in degrees */
-    double longitude;
+    private double longitude;
 
-    public AirportData() { }
+    public Airport() { }
 
     public String getIata() {
         return iata;
@@ -50,8 +50,8 @@ public class AirportData {
     }
 
     public boolean equals(Object other) {
-        if (other instanceof AirportData) {
-            return ((AirportData)other).getIata().equals(this.getIata());
+        if (other instanceof Airport) {
+            return ((Airport)other).getIata().equals(this.getIata());
         }
 
         return false;

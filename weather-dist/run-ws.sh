@@ -13,7 +13,7 @@ trap cleanup EXIT
 
 mvn test dependency:build-classpath -Dmdep.outputFile=cp.txt
 CLASSPATH=$(cat cp.txt):target/classes
-java -classpath ${CLASSPATH} com.crossover.trial.weather.WeatherServer &
+java -classpath ${CLASSPATH} com.crossover.trial.weather.agents.WeatherServer &
 SERVER_PID=$$
 
 while ! nc localhost 9090 > /dev/null 2>&1 < /dev/null; do
@@ -21,6 +21,6 @@ while ! nc localhost 9090 > /dev/null 2>&1 < /dev/null; do
     sleep 1
 done
 
-java -classpath ${CLASSPATH} com.crossover.trial.weather.WeatherClient
+java -classpath ${CLASSPATH} com.crossover.trial.weather.agents.WeatherClient
 CLIENT_PID=$$
 cleanup

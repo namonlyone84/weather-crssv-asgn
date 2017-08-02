@@ -1,4 +1,4 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.common;
 
 /**
  * The various types of data points we can collect.
@@ -8,8 +8,8 @@ package com.crossover.trial.weather;
 public enum DataPointType {
     WIND,
     TEMPERATURE,
-    HUMIDTY,
+    HUMIDITY,
     PRESSURE,
-    CLOUDCOVER,
+    CLOUD_COVER,
     PRECIPITATION
 }

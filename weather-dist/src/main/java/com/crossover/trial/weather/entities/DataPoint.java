@@ -1,4 +1,4 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.entities;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -10,15 +10,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class DataPoint {
 
-    public double mean = 0.0;
+    private double mean = 0.0;
 
-    public int first = 0;
+    private int first = 0;
 
-    public int second = 0;
+    private int second = 0;
 
-    public int third = 0;
+    private int third = 0;
 
-    public int count = 0;
+    private int count = 0;
 
     /** private constructor, use the builder to create this object */
     private DataPoint() { }
@@ -36,7 +36,7 @@ public class DataPoint {
         return mean;
     }
 
-    protected void setMean(double mean) { this.mean = mean; }
+    public void setMean(double mean) { this.mean = mean; }
 
     /** 1st quartile -- useful as a lower bound */
     public int getFirst() {
