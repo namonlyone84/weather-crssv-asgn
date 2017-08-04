@@ -1,6 +1,6 @@
 package com.crossover.trial.weather.repository;
 
-import com.crossover.trial.weather.entities.Airport;
+import com.crossover.trial.weather.entity.Airport;
 
 import java.util.List;
 import java.util.Set;
@@ -14,10 +14,13 @@ public interface AirportRepository {
      */
     Airport findAirport(String iataCode);
 
+    boolean exist(String iataCode);
+
     List<Airport> findAll();
 
     /**
      * Get all available airport IATA codes
+     *
      * @return list of airport IATA codes
      */
     Set<String> getAllAirportCodes();
@@ -25,10 +28,9 @@ public interface AirportRepository {
     /**
      * Add a new known airport to our list.
      *
-     * @param iataCode 3 letter code
-     * @param latitude in degrees
+     * @param iataCode  3 letter code
+     * @param latitude  in degrees
      * @param longitude in degrees
-     *
      * @return the added airport
      */
     Airport addAirport(String iataCode, double latitude, double longitude);

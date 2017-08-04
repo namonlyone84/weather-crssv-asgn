@@ -1,14 +1,14 @@
-package com.crossover.trial.weather.endpoints;
+package com.crossover.trial.weather.endpoint;
 
 import com.crossover.trial.weather.WeatherCollectorEndpoint;
 import com.crossover.trial.weather.common.DataPointType;
+import com.crossover.trial.weather.common.JSONHelper;
+import com.crossover.trial.weather.entity.Airport;
+import com.crossover.trial.weather.entity.DataPoint;
 import com.crossover.trial.weather.exception.WeatherException;
-import com.crossover.trial.weather.entities.Airport;
-import com.crossover.trial.weather.entities.DataPoint;
-import com.crossover.trial.weather.services.AirportService;
-import com.crossover.trial.weather.services.WeatherService;
-import com.crossover.trial.weather.services.factory.ServiceRegistryFactory;
-import com.google.gson.Gson;
+import com.crossover.trial.weather.service.AirportService;
+import com.crossover.trial.weather.service.WeatherService;
+import com.crossover.trial.weather.service.factory.ServiceRegistryFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,19 +16,18 @@ import javax.ws.rs.core.Response;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import static com.crossover.trial.weather.configuration.AppConfig.SERVER_STOP;
+
 /**
- * A REST implementation of the WeatherCollector API. Accessible only to airport checkWeatherForAirport collection
+ * A REST implementation of the WeatherCollector API. Accessible only to airport weather collection
  * sites via secure VPN.
  *
  * @author code test administrator
  */
 
 @Path("/collect")
-public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint{
+public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
     public final static Logger LOGGER = Logger.getLogger(WeatherCollectorEndpointImpl.class.getName());
-
-    /** shared gson json to object factory */
-    public final static Gson gson = new Gson();
 
     private final WeatherService collectorService;
 
@@ -48,10 +47,10 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint{
     @GET
     @Path("/ping")
     public Response ping() {
-        LOGGER.info("Call to ping collect endpoint");
+        LOGGER.info("Ping collect endpoint");
         return Response
                 .status(Response.Status.OK)
-                .entity("ready")
+                .entity("1")
                 .build();
     }
 
@@ -59,20 +58,19 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint{
      * Update the airports atmospheric information for a particular pointType with
      * json formatted data point information.
      *
-     * @param iataCode the 3 letter airport code
+     * @param iataCode  the 3 letter airport code
      * @param pointType the point type, {@link DataPointType} for a complete list
-     * @param dataPoint a json dict containing mean, first, second, thrid and count keys
-     *
+     * @param dataPoint a json dict containing mean, first, second, third and count keys
      * @return HTTP Response code
      */
     @POST
     @Path("/weather/{iata}/{pointType}")
     public Response updateWeather(@PathParam("iata") String iataCode,
                                   @PathParam("pointType") String pointType,
-                                  String dataPoint) {
+                                  String dataPoint) throws WeatherException {
         LOGGER.info("Call to add weather endpoint");
-        collectorService.addDataPoint(iataCode, pointType, gson.fromJson(dataPoint, DataPoint.class));
-        return Response.status(Response.Status.OK).build();
+        collectorService.addDataPoint(iataCode, pointType, JSONHelper.fromJson(dataPoint, DataPoint.class));
+        return Response.status(Response.Status.OK).entity("OK").build();
     }
 
     /**
@@ -89,7 +87,6 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint{
         return Response.status(Response.Status.OK).entity(airports).build();
     }
 
-
     /**
      * Retrieve airport data, including latitude and longitude for a particular airport
      *
@@ -104,24 +101,23 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint{
         return Response.status(Response.Status.OK).entity(airport).build();
     }
 
-
     /**
      * Add a new airport to the known airport list.
      *
-     * @param iata the 3 letter airport code of the new airport
-     * @param latString the airport's latitude in degrees as a string [-90, 90]
+     * @param iata       the 3 letter airport code of the new airport
+     * @param latString  the airport's latitude in degrees as a string [-90, 90]
      * @param longString the airport's longitude in degrees as a string [-180, 180]
      * @return HTTP Response code for the add operation
      */
     @POST
     @Path("/airport/{iata}/{lat}/{long}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addAirport(@PathParam("iata") String iata,
                                @PathParam("lat") String latString,
-                               @PathParam("long") String longString) {
-        airportService.addAirport(iata, Double.valueOf(latString), Double.valueOf(longString));
-        return Response.status(Response.Status.OK).build();
+                               @PathParam("long") String longString) throws WeatherException {
+        airportService.addAirport(iata, latString, longString);
+        return Response.status(Response.Status.OK).entity("OK").build();
     }
-
 
     /**
      * Remove an airport from the known airport list
@@ -142,7 +138,8 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint{
     @GET
     @Path("/exit")
     public Response exit() {
-        System.exit(0);
-        return Response.noContent().build();
+        // set flag to stop server
+        SERVER_STOP = true;
+        return Response.status(Response.Status.OK).entity("Server in shutdown progress..").build();
     }
 }

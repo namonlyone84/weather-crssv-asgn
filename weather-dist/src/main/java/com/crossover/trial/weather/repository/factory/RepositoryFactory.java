@@ -1,7 +1,7 @@
 package com.crossover.trial.weather.repository.factory;
 
-import com.crossover.trial.weather.repository.*;
 import com.crossover.trial.weather.exception.WeatherException;
+import com.crossover.trial.weather.repository.*;
 
 import static com.crossover.trial.weather.repository.factory.RepositoryType.IN_MEMORY;
 

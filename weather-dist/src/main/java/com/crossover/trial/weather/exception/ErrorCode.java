@@ -3,8 +3,17 @@ package com.crossover.trial.weather.exception;
 import org.eclipse.jetty.http.HttpStatus;
 
 public enum ErrorCode {
+    // Illegal atmosphere data
     WEA_1001(HttpStatus.BAD_REQUEST_400),
-    WEA_1002(HttpStatus.NOT_FOUND_404);
+
+    // Data not found
+    WEA_1002(HttpStatus.NOT_FOUND_404),
+
+    // Wrong format data
+    WEA_1003(HttpStatus.BAD_REQUEST_400),
+
+    // Duplicate data
+    WEA_1004(HttpStatus.CONFLICT_409);
 
     private int httpStatus;
 
@@ -12,10 +21,10 @@ public enum ErrorCode {
     }
 
     private ErrorCode(int httpStatus) {
-        httpStatus = httpStatus;
+        this.httpStatus = httpStatus;
     }
 
     public int getHttpStatus() {
-        return httpStatus;
+        return this.httpStatus;
     }
 }

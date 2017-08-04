@@ -1,6 +1,6 @@
 package com.crossover.trial.weather.client;
 
-import com.crossover.trial.weather.entities.DataPoint;
+import com.crossover.trial.weather.entity.DataPoint;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.client.*;

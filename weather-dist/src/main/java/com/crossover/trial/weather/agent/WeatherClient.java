@@ -1,7 +1,7 @@
-package com.crossover.trial.weather.agents;
+package com.crossover.trial.weather.agent;
 
 import com.crossover.trial.weather.client.RestClient;
-import com.crossover.trial.weather.entities.DataPoint;
+import com.crossover.trial.weather.entity.DataPoint;
 
 import javax.ws.rs.core.Response;
 
@@ -50,23 +50,25 @@ public class WeatherClient {
     }
 
     public void exit() {
-        client.exit();
+        Response response = client.exit();
+        response.close();
     }
 
     public static void main(String[] args) {
         WeatherClient weatherClient = new WeatherClient();
+        double weatherRadius = 0;
 
         weatherClient.pingCollect();
         weatherClient.populate("wind", 0, 10, 6, 4, 20);
+        weatherClient.pingQuery();
 
-        double weatherRadius = 0;
         weatherClient.query("BOS", weatherRadius);
         weatherClient.query("JFK", weatherRadius);
         weatherClient.query("EWR", weatherRadius);
         weatherClient.query("LGA", weatherRadius);
         weatherClient.query("MMU", weatherRadius);
-
         weatherClient.pingQuery();
+
         weatherClient.exit();
         System.out.print("complete");
         System.exit(0);

@@ -1,4 +1,4 @@
-package com.crossover.trial.weather.entities;
+package com.crossover.trial.weather.entity;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Airport {
 
     /** the three letter IATA code */
-    private String iata;
+    private String iata = "";
 
     /** latitude value in degrees */
     private double latitude;

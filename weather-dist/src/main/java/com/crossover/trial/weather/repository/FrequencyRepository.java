@@ -11,8 +11,6 @@ public interface FrequencyRepository {
 
     int getRequestFrequency(String iataCode, int defaultValue);
 
-    Set<String> getAllRequestIataCodes();
-
     Set<Double> getAllRadiuses();
 
     int getRadiusFrequency(Double radius);

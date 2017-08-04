@@ -1,6 +1,11 @@
 package com.crossover.trial.weather.repository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class FrequencyInMemoryRepository implements FrequencyRepository {
     private static FrequencyRepository instance;
@@ -14,6 +19,8 @@ public class FrequencyInMemoryRepository implements FrequencyRepository {
 
     private Map<Double, Integer> radiusFrequency = new HashMap<>();
 
+    private ReadWriteLock lock = new ReentrantReadWriteLock();
+
     private FrequencyInMemoryRepository() {
     }
 
@@ -25,42 +32,52 @@ public class FrequencyInMemoryRepository implements FrequencyRepository {
         return instance;
     }
 
-
     @Override
     public void update(String iata, Double radius) {
+        lock.writeLock().lock();
         requestFrequency.put(iata, requestFrequency.getOrDefault(iata, 0) + 1);
         radiusFrequency.put(radius, radiusFrequency.getOrDefault(radius, 0) + 1);
+        lock.writeLock().unlock();
     }
 
     @Override
     public void clear() {
+        lock.writeLock().lock();
         requestFrequency.clear();
         radiusFrequency.clear();
+        lock.writeLock().unlock();
     }
 
     @Override
     public long getTotalRequest() {
-        return requestFrequency.values().stream()
+        lock.readLock().lock();
+        long result = requestFrequency.values().stream()
                 .mapToLong(Integer::intValue).sum();
+        lock.readLock().unlock();
+        return result;
     }
 
     @Override
     public int getRequestFrequency(String iataCode, int defaultValue) {
-        return requestFrequency.getOrDefault(iataCode, defaultValue);
-    }
-
-    @Override
-    public Set<String> getAllRequestIataCodes() {
-        return new HashSet<>(requestFrequency.keySet());
+        lock.readLock().lock();
+        int result = requestFrequency.getOrDefault(iataCode, defaultValue);
+        lock.readLock().unlock();
+        return result;
     }
 
     @Override
     public Set<Double> getAllRadiuses() {
-        return new HashSet<>(radiusFrequency.keySet());
+        lock.readLock().lock();
+        Set<Double> result = new HashSet<>(radiusFrequency.keySet());
+        lock.readLock().unlock();
+        return result;
     }
 
     @Override
     public int getRadiusFrequency(Double radius) {
-        return radiusFrequency.get(radius);
+        lock.readLock().lock();
+        int result = radiusFrequency.get(radius);
+        lock.readLock().unlock();
+        return result;
     }
 }

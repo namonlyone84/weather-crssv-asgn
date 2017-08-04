@@ -1,6 +1,4 @@
-package com.crossover.trial.weather.entities;
-
-import com.crossover.trial.weather.entities.DataPoint;
+package com.crossover.trial.weather.entity;
 
 /**
  * encapsulates sensor information for a particular location
@@ -32,11 +30,11 @@ public class AtmosphericInformation {
 
     }
 
-    protected AtmosphericInformation(DataPoint temperature, DataPoint wind, DataPoint humidity, DataPoint percipitation, DataPoint pressure, DataPoint cloudCover) {
+    protected AtmosphericInformation(DataPoint temperature, DataPoint wind, DataPoint humidity, DataPoint precipitation, DataPoint pressure, DataPoint cloudCover) {
         this.temperature = temperature;
         this.wind = wind;
         this.humidity = humidity;
-        this.precipitation = percipitation;
+        this.precipitation = precipitation;
         this.pressure = pressure;
         this.cloudCover = cloudCover;
         this.lastUpdateTime = System.currentTimeMillis();

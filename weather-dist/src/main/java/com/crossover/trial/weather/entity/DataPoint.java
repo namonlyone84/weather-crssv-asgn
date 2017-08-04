@@ -1,7 +1,9 @@
-package com.crossover.trial.weather.entities;
+package com.crossover.trial.weather.entity;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.math.BigDecimal;
 
 /**
  * A collected point, including some information about the range of collected values
@@ -23,7 +25,7 @@ public class DataPoint {
     /** private constructor, use the builder to create this object */
     private DataPoint() { }
 
-    protected DataPoint(int first, int second, int mean, int third, int count) {
+    protected DataPoint(int first, int second, double mean, int third, int count) {
         this.setFirst(first);
         this.setMean(mean);
         this.setSecond(second);
@@ -79,12 +81,18 @@ public class DataPoint {
     }
 
     public boolean equals(Object that) {
-        return this.toString().equals(that.toString());
+        DataPoint dataPoint = (DataPoint) that;
+        return dataPoint != null
+                && dataPoint.getFirst() == this.first
+                && dataPoint.getSecond() == this.second
+                && new BigDecimal(dataPoint.getMean()).equals(new BigDecimal(this.mean))
+                && dataPoint.getThird() == this.third
+                && dataPoint.getCount() == this.count;
     }
 
     static public class Builder {
         int first;
-        int mean;
+        double mean;
         int median;
         int last;
         int count;
@@ -92,32 +100,32 @@ public class DataPoint {
         public Builder() { }
 
         public Builder withFirst(int first) {
-            first= first;
+            this.first= first;
             return this;
         }
 
-        public Builder withMean(int mean) {
-            mean = mean;
+        public Builder withMean(double mean) {
+            this.mean = mean;
             return this;
         }
 
         public Builder withMedian(int median) {
-            median = median;
+            this.median = median;
             return this;
         }
 
         public Builder withCount(int count) {
-            count = count;
+            this.count = count;
             return this;
         }
 
         public Builder withLast(int last) {
-            last = last;
+            this.last = last;
             return this;
         }
 
         public DataPoint build() {
-            return new DataPoint(this.first, this.mean, this.median, this.last, this.count);
+            return new DataPoint(this.first, this.median, this.mean, this.last, this.count);
         }
     }
 }

@@ -1,9 +1,9 @@
 package com.crossover.trial.weather.common;
 
+import com.crossover.trial.weather.entity.AtmosphericInformation;
+import com.crossover.trial.weather.entity.DataPoint;
 import com.crossover.trial.weather.exception.ErrorCode;
 import com.crossover.trial.weather.exception.WeatherException;
-import com.crossover.trial.weather.entities.AtmosphericInformation;
-import com.crossover.trial.weather.entities.DataPoint;
 
 public class WeatherHelper {
     private static final int TEMPERATURE_MIN = -50;

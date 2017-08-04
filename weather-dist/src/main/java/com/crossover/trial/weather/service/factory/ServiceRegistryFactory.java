@@ -1,4 +1,4 @@
-package com.crossover.trial.weather.services.factory;
+package com.crossover.trial.weather.service.factory;
 
 import java.util.HashMap;
 import java.util.Map;

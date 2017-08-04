@@ -1,12 +1,12 @@
-package com.crossover.trial.weather.endpoints;
+package com.crossover.trial.weather.endpoint;
 
 import com.crossover.trial.weather.WeatherQueryEndpoint;
+import com.crossover.trial.weather.common.JSONHelper;
+import com.crossover.trial.weather.entity.AtmosphericInformation;
 import com.crossover.trial.weather.exception.WeatherException;
-import com.crossover.trial.weather.entities.AtmosphericInformation;
-import com.crossover.trial.weather.services.StatisticService;
-import com.crossover.trial.weather.services.WeatherService;
-import com.crossover.trial.weather.services.factory.ServiceRegistryFactory;
-import com.google.gson.Gson;
+import com.crossover.trial.weather.service.StatisticService;
+import com.crossover.trial.weather.service.WeatherService;
+import com.crossover.trial.weather.service.factory.ServiceRegistryFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,9 +28,6 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
 
     public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
 
-    /** shared gson json to object factory */
-    public static final Gson gson = new Gson();
-
     private WeatherService collectorService;
 
     private StatisticService statisticService;
@@ -51,23 +48,22 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
     @GET
     @Path("/ping")
     public String ping() {
-        return gson.toJson(collectorService.getHealthStatus());
+        return JSONHelper.toJson(collectorService.getHealthStatus());
     }
 
     /**
      * Retrieve the most up to date atmospheric information from the given airport and other airports in the given
      * radius.
      *
-     * @param iata the three letter airport code
+     * @param iata         the three letter airport code
      * @param radiusString the radius, in km, from which to collect checkWeatherForAirport data
-     *
      * @return an HTTP Response and a list of {@link AtmosphericInformation} from the requested airport and
      * airports in the given radius
      */
     @GET
     @Path("/weather/{iata}/{radius}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) {
+    public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) throws WeatherException {
         double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
 
         List<AtmosphericInformation> whetherInformation = collectorService.getAirportWeather(iata, radius);

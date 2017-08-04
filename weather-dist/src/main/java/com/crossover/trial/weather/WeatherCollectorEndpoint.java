@@ -25,7 +25,7 @@ public interface WeatherCollectorEndpoint {
      * json formatted data point information.
      *
      * @param iataCode the 3 letter airport code
-     * @param pointType the point type, {@link DataPointType} for a complete list
+     * @param pointType the point type, {@link com.crossover.trial.weather.common.DataPointType} for a complete list
      * @param datapointJson a json dict containing mean, first, second, thrid and count keys
      *
      * @return HTTP Response code
@@ -50,7 +50,7 @@ public interface WeatherCollectorEndpoint {
      * Retrieve airport data, including latitude and longitude for a particular airport
      *
      * @param iata the 3 letter airport code
-     * @return an HTTP Response with a json representation of {@link AirportData}
+     * @return an HTTP Response with a json representation of {@link com.crossover.trial.weather.entity.Airport}
      */
     @GET
     @Path("/airport/{iata}")
@@ -75,7 +75,7 @@ public interface WeatherCollectorEndpoint {
      * Remove an airport from the known airport list
      *
      * @param iata the 3 letter airport code
-     * @return HTTP Repsonse code for the delete operation
+     * @return HTTP Response code for the delete operation
      */
     @DELETE
     @Path("/airport/{iata}")

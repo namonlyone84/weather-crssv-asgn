@@ -1,11 +1,12 @@
-package com.crossover.trial.weather.agents;
+package com.crossover.trial.weather.agent;
 
 import com.crossover.trial.weather.client.AirportCSVParser;
 import com.crossover.trial.weather.client.RestClient;
-import com.crossover.trial.weather.entities.Airport;
+import com.crossover.trial.weather.entity.Airport;
 
 import javax.ws.rs.core.Response;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,10 +26,10 @@ public class AirportLoader {
         csvParser = new AirportCSVParser();
     }
 
-    private void upload(List<Airport> airports) throws IOException{
+    private void upload(List<Airport> airports) throws IOException {
         airports.stream().forEach(airport -> {
             Response response = client.addAirport(airport.getIata(), airport.getLatitude(), airport.getLongitude());
-            System.out.println("Uploaded airport:" + response.readEntity(String.class));
+            System.out.println(String.format("Upload airport %1$s : %2$s", airport, response.readEntity(String.class)));
         });
     }
 
@@ -37,10 +38,10 @@ public class AirportLoader {
         upload(airports);
     }
 
-    public static void main(String args[]) throws IOException{
+    public static void main(String args[]) throws IOException {
         String filePath = null;
 
-        if (args != null && args.length >=1) {
+        if (args != null && args.length >= 1) {
             File airportDataFile = new File(args[0]);
 
             if (!airportDataFile.exists() || airportDataFile.length() == 0) {
@@ -53,6 +54,5 @@ public class AirportLoader {
 
         AirportLoader airportLoader = new AirportLoader();
         airportLoader.runForFile(filePath);
-        System.exit(0);
     }
 }

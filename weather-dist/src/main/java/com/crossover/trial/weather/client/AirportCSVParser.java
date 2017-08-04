@@ -1,6 +1,6 @@
 package com.crossover.trial.weather.client;
 
-import com.crossover.trial.weather.entities.Airport;
+import com.crossover.trial.weather.entity.Airport;
 import org.apache.commons.lang3.StringUtils;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseDouble;
@@ -15,9 +15,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AirportCSVParser {
     private static final String DEFAULT_CSV_FILE = "airports.dat";
+    private static Logger logger = Logger.getLogger(AirportCSVParser.class.getName());
 
     public List<Airport> readAirportFromFile(String filePath) {
         List<Airport> airports = new ArrayList<>();
@@ -38,9 +41,9 @@ public class AirportCSVParser {
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Cannot file CSV file", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, null, e);
         }
 
         return airports;

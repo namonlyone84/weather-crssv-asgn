@@ -1,11 +1,11 @@
 package com.crossover.trial.weather;
 
-import com.crossover.trial.weather.exception.WeatherException;
 import com.crossover.trial.weather.configuration.AppConfig;
-import com.crossover.trial.weather.endpoints.WeatherCollectorEndpointImpl;
-import com.crossover.trial.weather.endpoints.WeatherQueryEndpointImpl;
-import com.crossover.trial.weather.entities.AtmosphericInformation;
-import com.crossover.trial.weather.entities.DataPoint;
+import com.crossover.trial.weather.endpoint.WeatherCollectorEndpointImpl;
+import com.crossover.trial.weather.endpoint.WeatherQueryEndpointImpl;
+import com.crossover.trial.weather.entity.AtmosphericInformation;
+import com.crossover.trial.weather.entity.DataPoint;
+import com.crossover.trial.weather.exception.WeatherException;
 import com.crossover.trial.weather.repository.AirportRepository;
 import com.crossover.trial.weather.repository.AtmosphereRepository;
 import com.crossover.trial.weather.repository.FrequencyRepository;
