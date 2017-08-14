@@ -4,7 +4,6 @@ import com.crossover.trial.weather.entity.Airport;
 import org.apache.commons.lang3.StringUtils;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseDouble;
-import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.io.ICsvBeanReader;
@@ -22,7 +21,7 @@ public class AirportCSVParser {
     private static final String DEFAULT_CSV_FILE = "airports.dat";
     private static Logger logger = Logger.getLogger(AirportCSVParser.class.getName());
 
-    public List<Airport> readAirportFromFile(String filePath) {
+    public List<Airport> readAirportsFromFile(String filePath) {
         List<Airport> airports = new ArrayList<>();
         filePath = getPathOrDefault(filePath);
 
@@ -62,15 +61,15 @@ public class AirportCSVParser {
     }
 
     private CellProcessor[] getFieldProcessors() {
-        final CellProcessor[] processors = new CellProcessor[] {
+        final CellProcessor[] processors = new CellProcessor[]{
                 new Optional(),
                 new Optional(),
                 new Optional(),
                 new Optional(),
-                new NotNull(), // iata
+                new Optional(), // iata
                 new Optional(),
-                new NotNull(new ParseDouble()), // latitude
-                new NotNull(new ParseDouble()), // longtitude
+                new Optional(new ParseDouble()), // latitude
+                new Optional(new ParseDouble()), // longtitude
                 new Optional(),
                 new Optional(),
                 new Optional(),

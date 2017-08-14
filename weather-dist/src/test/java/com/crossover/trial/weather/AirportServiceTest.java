@@ -24,7 +24,7 @@ import static com.crossover.trial.weather.configuration.AppConfig.CURRENT_REPOSI
 import static com.crossover.trial.weather.exception.ErrorCode.WEA_1002;
 
 public class AirportServiceTest {
-    private static final String[] IATA_CODES = new String[]{"From1", "To1", "From2", "To2"};
+    private static final String[] IATA_CODES = new String[]{"BOS", "EWR", "LCY", "STN"};
 
     private AirportService airportService = new AirportService();
 
@@ -81,10 +81,10 @@ public class AirportServiceTest {
     }
 
     @Test
-    public void testAddAirport_successful() {
+    public void testAddAirport_success() {
         String latitude = "30";
         String longitude = "-50";
-        String iataCode = "NewAirport";
+        String iataCode = "EFG";
 
         airportService.addAirport(iataCode, latitude, longitude);
         Airport newAirport = airportRepository.findAirport(iataCode);
@@ -172,9 +172,9 @@ public class AirportServiceTest {
     }
 
     @Test
-    public void testAddAirport_duplicateIataCode_throwException() {
-        String latitude = "1234";
-        String longitude = "5678";
+    public void testAddAirport_duplicateAirport_throwException() {
+        String latitude = "30";
+        String longitude = "50";
         String iataCode = IATA_CODES[0];
 
         exception.expect(WeatherException.class);
@@ -184,7 +184,31 @@ public class AirportServiceTest {
     }
 
     @Test
-    public void testDelete_Airport_success() {
+    public void testAddAirport_emptyIataCode_throwException() {
+        String latitude = "30";
+        String longitude = "50";
+        String iataCode = " ";
+
+        exception.expect(WeatherException.class);
+        exception.expect(ExceptionMatcher.hasCode(ErrorCode.WEA_1003));
+
+        airportService.addAirport(iataCode, latitude, longitude);
+    }
+
+    @Test
+    public void testAddAirport_iataCodeMustContain3Character_throwException() {
+        String latitude = "20";
+        String longitude = "30";
+        String iataCode = "ABCD";
+
+        exception.expect(WeatherException.class);
+        exception.expect(ExceptionMatcher.hasCode(ErrorCode.WEA_1003));
+
+        airportService.addAirport(iataCode, latitude, longitude);
+    }
+
+    @Test
+    public void testDeleteAirport_success() {
         String existingCode = IATA_CODES[0];
 
         int currentSize = airportRepository.findAll().size();

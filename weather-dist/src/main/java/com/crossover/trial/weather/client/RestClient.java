@@ -51,6 +51,7 @@ public class RestClient {
     }
 
     public Response addAirport(String iata, double latString, double longString) {
+        iata = StringUtils.isEmpty(iata) ? " " : iata;
         StringBuilder path = new StringBuilder("/airport/")
                 .append(iata)
                 .append("/").append(latString)

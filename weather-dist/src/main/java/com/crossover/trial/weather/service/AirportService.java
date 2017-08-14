@@ -1,5 +1,6 @@
 package com.crossover.trial.weather.service;
 
+import com.crossover.trial.weather.common.AirportHelper;
 import com.crossover.trial.weather.entity.Airport;
 import com.crossover.trial.weather.entity.AtmosphericInformation;
 import com.crossover.trial.weather.exception.ErrorCode;
@@ -44,7 +45,7 @@ public class AirportService {
     }
 
     public void checkNotFoundAirport(String iataCode) {
-        if (!airportRepository.exist(iataCode)) {
+        if (!airportRepository.isExist(iataCode)) {
             String dataType = new StringBuilder("airport ").append(iataCode).toString();
             throw new WeatherException(ErrorCode.WEA_1002, dataType, "IATA code");
         }
@@ -61,11 +62,12 @@ public class AirportService {
      */
     public Airport addAirport(String iataCode, String latitude, String longitude) throws WeatherException {
         checkDuplicateAirport(iataCode);
+        AirportHelper.checkIATAFormat(iataCode);
 
         try {
             double lat = Double.valueOf(latitude);
             double lon = Double.valueOf(longitude);
-            checkLatLonRange(lat, lon);
+            AirportHelper.checkLatLonRange(lat, lon);
 
             AtmosphericInformation atmosphericInformation = new AtmosphericInformation();
             atmosphereRepository.save(iataCode, atmosphericInformation);
@@ -80,13 +82,6 @@ public class AirportService {
         Airport airport = airportRepository.findAirport(iataCode);
         if (airport != null) {
             throw new WeatherException(ErrorCode.WEA_1004, "airport " + iataCode);
-        }
-    }
-
-    private void checkLatLonRange(double lat, double lon) {
-        if ((lat < -90 || lat > 90) || (lon < -180 || lon > 180)) {
-            throw new WeatherException(ErrorCode.WEA_1003,
-                    "latitude/longitude", "Should be Latitude [-90, 90], longitude [-180, 180].");
         }
     }
 

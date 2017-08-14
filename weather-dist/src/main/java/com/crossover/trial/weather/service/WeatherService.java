@@ -140,7 +140,10 @@ public class WeatherService {
 
     private List<AtmosphericInformation> getWeatherForSingleAirport(String iataCode) {
         List<AtmosphericInformation> weather = new ArrayList<>();
-        weather.add(atmosphereRepository.find(iataCode));
+        AtmosphericInformation atmosphere = atmosphereRepository.find(iataCode);
+        if (WeatherHelper.isNotEmpty(atmosphere)) {
+            weather.add(atmosphere);
+        }
         return weather;
     }
 

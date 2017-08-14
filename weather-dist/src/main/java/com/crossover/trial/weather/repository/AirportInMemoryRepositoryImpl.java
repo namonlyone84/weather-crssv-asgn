@@ -44,7 +44,7 @@ public class AirportInMemoryRepositoryImpl implements AirportRepository {
     }
 
     @Override
-    public boolean exist(String iataCode) {
+    public boolean isExist(String iataCode) {
         lock.readLock().lock();
         boolean result = AIRPORTS_CACHE.stream()
                 .anyMatch(airport -> airport.getIata().equalsIgnoreCase(iataCode));

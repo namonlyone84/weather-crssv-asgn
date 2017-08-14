@@ -15,7 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.logging.Logger;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * The Weather App REST endpoint allows clients to query, update and check health stats. Currently, all data is
@@ -25,9 +26,6 @@ import java.util.logging.Logger;
  */
 @Path("/query")
 public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
-
-    public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
-
     private WeatherService collectorService;
 
     private StatisticService statisticService;
@@ -64,7 +62,7 @@ public class WeatherQueryEndpointImpl implements WeatherQueryEndpoint {
     @Path("/weather/{iata}/{radius}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response weather(@PathParam("iata") String iata, @PathParam("radius") String radiusString) throws WeatherException {
-        double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
+        double radius = isBlank(radiusString) ? 0 : Double.valueOf(radiusString);
 
         List<AtmosphericInformation> whetherInformation = collectorService.getAirportWeather(iata, radius);
         statisticService.updateFrequencies(iata, radius);

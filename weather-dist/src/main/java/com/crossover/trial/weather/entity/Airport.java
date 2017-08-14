@@ -10,16 +10,23 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class Airport {
 
-    /** the three letter IATA code */
-    private String iata = "";
+    /**
+     * the three letter IATA code
+     */
+    private String iata = " ";
 
-    /** latitude value in degrees */
+    /**
+     * latitude value in degrees
+     */
     private double latitude;
 
-    /** longitude value in degrees */
+    /**
+     * longitude value in degrees
+     */
     private double longitude;
 
-    public Airport() { }
+    public Airport() {
+    }
 
     public String getIata() {
         return iata;
@@ -51,9 +58,8 @@ public class Airport {
 
     public boolean equals(Object other) {
         if (other instanceof Airport) {
-            return ((Airport)other).getIata().equals(this.getIata());
+            return ((Airport) other).getIata().equals(this.getIata());
         }
-
         return false;
     }
 }

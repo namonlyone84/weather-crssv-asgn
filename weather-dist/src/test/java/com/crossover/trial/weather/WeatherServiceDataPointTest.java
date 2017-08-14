@@ -13,8 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.math.BigDecimal;
-
 import static com.crossover.trial.weather.common.DataPointType.*;
 import static com.crossover.trial.weather.configuration.AppConfig.CURRENT_REPOSITORY_TYPE;
 import static com.crossover.trial.weather.exception.ErrorCode.WEA_1001;
@@ -63,7 +61,7 @@ public class WeatherServiceDataPointTest {
         weatherService.addDataPoint(IATA, TEMPERATURE.toString(), dataPoint);
         AtmosphericInformation information = atmosphereRepository.find(IATA);
 
-        Assert.assertTrue(isDataPointEqual(information.getTemperature(), 3, 7, 5.33, 10, 20));
+        Assert.assertEquals(information.getTemperature(), dataPoint);
         Assert.assertTrue(information.getLastUpdateTime() >= beforeUpdate);
     }
 
@@ -75,7 +73,7 @@ public class WeatherServiceDataPointTest {
         weatherService.addDataPoint(IATA, HUMIDITY.toString(), dataPoint);
         AtmosphericInformation information = atmosphereRepository.find(IATA);
 
-        Assert.assertTrue(isDataPointEqual(information.getHumidity(), 3, 7, 5.33, 10, 20));
+        Assert.assertEquals(information.getHumidity(), dataPoint);
         Assert.assertTrue(information.getLastUpdateTime() >= beforeUpdate);
     }
 
@@ -87,7 +85,7 @@ public class WeatherServiceDataPointTest {
         weatherService.addDataPoint(IATA, PRESSURE.toString(), dataPoint);
         AtmosphericInformation information = atmosphereRepository.find(IATA);
 
-        Assert.assertTrue(isDataPointEqual(information.getPressure(), 600, 700, 651.38, 1000, 20));
+        Assert.assertEquals(information.getPressure(), dataPoint);
         Assert.assertTrue(information.getLastUpdateTime() >= beforeUpdate);
     }
 
@@ -99,7 +97,7 @@ public class WeatherServiceDataPointTest {
         weatherService.addDataPoint(IATA, CLOUD_COVER.toString(), dataPoint);
         AtmosphericInformation information = atmosphereRepository.find(IATA);
 
-        Assert.assertTrue(isDataPointEqual(information.getCloudCover(), 3, 7, 5.33, 10, 20));
+        Assert.assertEquals(information.getCloudCover(), dataPoint);
         Assert.assertTrue(information.getLastUpdateTime() >= beforeUpdate);
     }
 
@@ -111,7 +109,7 @@ public class WeatherServiceDataPointTest {
         weatherService.addDataPoint(IATA, PRECIPITATION.toString(), dataPoint);
         AtmosphericInformation information = atmosphereRepository.find(IATA);
 
-        Assert.assertTrue(isDataPointEqual(information.getPrecipitation(), 3, 7, 5.33, 10, 20));
+        Assert.assertEquals(information.getPrecipitation(), dataPoint);
         Assert.assertTrue(information.getLastUpdateTime() >= beforeUpdate);
     }
 
@@ -143,16 +141,6 @@ public class WeatherServiceDataPointTest {
         exception.expect(hasCode(WEA_1001));
 
         weatherService.addDataPoint(IATA, "NOTYPE", dataPoint);
-    }
-
-    private boolean isDataPointEqual(DataPoint dataPoint, int first, int median, double mean, int last, int count) {
-        return dataPoint != null
-                && dataPoint.getFirst() == first
-                && dataPoint.getSecond() == median
-                && new BigDecimal(dataPoint.getMean()).equals(new BigDecimal(mean))
-                && dataPoint.getThird() == last
-                && dataPoint.getCount() == count;
-
     }
 
     private DataPoint newDataPoint(int first, int median, double mean, int last, int count) {

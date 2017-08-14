@@ -26,7 +26,7 @@ public class AirportLoader {
         csvParser = new AirportCSVParser();
     }
 
-    private void upload(List<Airport> airports) throws IOException {
+    private void uploadToServer(List<Airport> airports) throws IOException {
         airports.stream().forEach(airport -> {
             Response response = client.addAirport(airport.getIata(), airport.getLatitude(), airport.getLongitude());
             System.out.println(String.format("Upload airport %1$s : %2$s", airport, response.readEntity(String.class)));
@@ -34,8 +34,8 @@ public class AirportLoader {
     }
 
     public void runForFile(String filePath) throws IOException {
-        List<Airport> airports = csvParser.readAirportFromFile(filePath);
-        upload(airports);
+        List<Airport> airports = csvParser.readAirportsFromFile(filePath);
+        uploadToServer(airports);
     }
 
     public static void main(String args[]) throws IOException {
@@ -46,7 +46,7 @@ public class AirportLoader {
 
             if (!airportDataFile.exists() || airportDataFile.length() == 0) {
                 System.err.println(airportDataFile + " is not a valid input");
-                System.exit(1);
+                return;
             }
 
             filePath = args[0];

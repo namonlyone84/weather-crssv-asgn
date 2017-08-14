@@ -39,12 +39,13 @@ public class StatisticService {
 
         long totalRequest = frequencyRepository.getTotalRequest();
         for (Airport airport : airportService.getAllAirports()) {
-            double frequency = 0;
+            double percentage = 0;
+            int numberRequest = frequencyRepository.getRequestFrequency(airport.getIata(), 0);
 
             if (totalRequest != 0) {
-                frequency = (double) frequencyRepository.getRequestFrequency(airport.getIata(), 0) / totalRequest;
+                percentage = (double) numberRequest / totalRequest;
             }
-            frequencies.put(airport.getIata(), frequency);
+            frequencies.put(airport.getIata(), percentage);
         }
 
         return frequencies;
@@ -54,14 +55,14 @@ public class StatisticService {
         Set<Double> allRecordedRadius = frequencyRepository.getAllRadiuses();
         int maxRadius = allRecordedRadius.stream()
                 .max(Double::compare)
-                .orElse(1000d).intValue() + 1;
+                .orElse(0d).intValue() + 1;
 
-        int[] hist = new int[maxRadius];
+        int[] ranges = new int[maxRadius];
         for (Double radius : allRecordedRadius) {
-            int index = radius.intValue() % 10;
-            hist[index] += frequencyRepository.getRadiusFrequency(radius);
+            int index = radius.intValue();
+            ranges[index] += frequencyRepository.getRadiusFrequency(radius);
         }
 
-        return hist;
+        return ranges;
     }
 }

@@ -24,10 +24,9 @@ public interface WeatherCollectorEndpoint {
      * Update the airports atmospheric information for a particular pointType with
      * json formatted data point information.
      *
-     * @param iataCode the 3 letter airport code
-     * @param pointType the point type, {@link com.crossover.trial.weather.common.DataPointType} for a complete list
+     * @param iataCode      the 3 letter airport code
+     * @param pointType     the point type, {@link com.crossover.trial.weather.common.DataPointType} for a complete list
      * @param datapointJson a json dict containing mean, first, second, thrid and count keys
-     *
      * @return HTTP Response code
      */
     @POST
@@ -60,8 +59,8 @@ public interface WeatherCollectorEndpoint {
     /**
      * Add a new airport to the known airport list.
      *
-     * @param iata the 3 letter airport code of the new airport
-     * @param latString the airport's latitude in degrees as a string [-90, 90]
+     * @param iata       the 3 letter airport code of the new airport
+     * @param latString  the airport's latitude in degrees as a string [-90, 90]
      * @param longString the airport's longitude in degrees as a string [-180, 180]
      * @return HTTP Response code for the add operation
      */

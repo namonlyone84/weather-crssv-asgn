@@ -21,6 +21,9 @@ while ! nc localhost 9090 > /dev/null 2>&1 < /dev/null; do
     sleep 1
 done
 
+java -classpath ${CLASSPATH} com.crossover.trial.weather.agent.AirportLoader
+CLIENT_PID=$$
+
 java -classpath ${CLASSPATH} com.crossover.trial.weather.agent.WeatherClient
 CLIENT_PID=$$
 cleanup

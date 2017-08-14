@@ -26,7 +26,11 @@ import static com.crossover.trial.weather.service.WeatherService.DATA_SIZE_HEALT
 import static com.crossover.trial.weather.service.WeatherService.IATA_REQUEST_HEALTH;
 
 public class WeatherServiceTest {
-    private static final String[] IATA_CODES = new String[]{"A0", "A1", "A2", "A3"};
+    private static final String[] IATA_CODES = new String[]{"BOS", "EWR", "LCY", "STN"};
+    private static final DataPoint[] DATA_POINTS = new DataPoint[]{
+            newDataPoint(4, 6, 5.33, 10, 30),
+            newDataPoint(3, 5, 4.33, 9, 25),
+            newDataPoint(600, 700, 651.38, 1000, 20)};
 
     private WeatherService weatherService = new WeatherService();
 
@@ -67,9 +71,9 @@ public class WeatherServiceTest {
 
     @Test
     public void testGetHealth_hasWeatherRequest() {
-        // 20% request to A0
+        // 20% request to BOS
         frequencyRepository.update(IATA_CODES[0], 100d);
-        // 80% request to A2
+        // 80% request to LCY
         for (int i = 0; i < 4; i++) {
             frequencyRepository.update(IATA_CODES[2], 100d);
         }
@@ -94,7 +98,13 @@ public class WeatherServiceTest {
         DataPoint windOfAirportA0 = weather.get(0).getWind();
 
         Assert.assertEquals(1, weather.size());
-        Assert.assertTrue(isDataPointEqual(windOfAirportA0, 4, 6, 5.33, 10, 30));
+        Assert.assertEquals(windOfAirportA0, DATA_POINTS[0]);
+    }
+
+    @Test
+    public void testGetWeather_noDataNoRadius_returnEmptyWeather() {
+        List<AtmosphericInformation> weather = weatherService.getAirportWeather(IATA_CODES[3], 0);
+        Assert.assertEquals(0, weather.size());
     }
 
     @Test
@@ -102,15 +112,15 @@ public class WeatherServiceTest {
         double radius = 5594.5;
         List<AtmosphericInformation> weather = weatherService.getAirportWeather(IATA_CODES[1], radius);
 
-        // should contain atmosphere of A0 and A1
+        // should contain atmosphere of BOS and LCY
         Assert.assertEquals(2, weather.size());
-        // wind of A0
+        // wind of BOS
         Assert.assertTrue(weather.stream().anyMatch(information -> {
-            return isDataPointEqual(information.getWind(), 4, 6, 5.33, 10, 30);
+            return DATA_POINTS[0].equals(information.getWind());
         }));
-        // temperature of A1
+        // temperature of LCY
         Assert.assertTrue(weather.stream().anyMatch(information -> {
-            return isDataPointEqual(information.getTemperature(), 3, 5, 4.33, 9, 25);
+            return DATA_POINTS[1].equals(information.getTemperature());
         }));
     }
 
@@ -128,7 +138,7 @@ public class WeatherServiceTest {
 
         // HUMIDITY of A3
         Assert.assertTrue(weather.stream().anyMatch(information -> {
-            return isDataPointEqual(information.getHumidity(), 6, 10, 8.00001, 15, 30);
+            return dataPoint.equals(information.getHumidity());
         }));
     }
 
@@ -141,33 +151,28 @@ public class WeatherServiceTest {
 
     private void prepareAirport() {
         /**
-         * Real distance from A1 to:
-         *      A0: 322km
-         *      A2: 5595km
-         *      A3: 5594.3km
+         * Real distance from EWR to:
+         *      BOS: 322km
+         *      LCY: 5595km
+         *      STN: 5594.3km
          */
-        // "General Edward Lawrence Logan Intl" airport
+        // BOS
         airportRepository.addAirport(IATA_CODES[0], 42.364347, -71.005181);
-        // "Newark Liberty Intl" airport
+        // EWR
         airportRepository.addAirport(IATA_CODES[1], 40.6925, -74.168667);
-        // "City" "London" airport
+        // LCY
         airportRepository.addAirport(IATA_CODES[2], 51.505278, 0.055278);
-        //"Stansted" "London" airport
+        // STN
         airportRepository.addAirport(IATA_CODES[3], 51.885, 0.235);
     }
 
     private void updateWeather() {
-        DataPoint dataPoint = newDataPoint(4, 6, 5.33, 10, 30);
-        weatherService.addDataPoint(IATA_CODES[0], WIND.toString(), dataPoint);
-
-        dataPoint = newDataPoint(3, 5, 4.33, 9, 25);
-        weatherService.addDataPoint(IATA_CODES[1], TEMPERATURE.toString(), dataPoint);
-
-        dataPoint = newDataPoint(600, 700, 651.38, 1000, 20);
-        weatherService.addDataPoint(IATA_CODES[2], PRESSURE.toString(), dataPoint);
+        weatherService.addDataPoint(IATA_CODES[0], WIND.toString(), DATA_POINTS[0]);
+        weatherService.addDataPoint(IATA_CODES[1], TEMPERATURE.toString(), DATA_POINTS[1]);
+        weatherService.addDataPoint(IATA_CODES[2], PRESSURE.toString(), DATA_POINTS[2]);
     }
 
-    private DataPoint newDataPoint(int first, int median, double mean, int last, int count) {
+    private static DataPoint newDataPoint(int first, int median, double mean, int last, int count) {
         DataPoint dataPoint = new DataPoint.Builder()
                 .withFirst(first)
                 .withMedian(median)
@@ -176,15 +181,5 @@ public class WeatherServiceTest {
                 .withCount(count)
                 .build();
         return dataPoint;
-    }
-
-    private boolean isDataPointEqual(DataPoint dataPoint, int first, int median, double mean, int last, int count) {
-        return dataPoint != null
-                && dataPoint.getFirst() == first
-                && dataPoint.getSecond() == median
-                && new BigDecimal(dataPoint.getMean()).equals(new BigDecimal(mean))
-                && dataPoint.getThird() == last
-                && dataPoint.getCount() == count;
-
     }
 }

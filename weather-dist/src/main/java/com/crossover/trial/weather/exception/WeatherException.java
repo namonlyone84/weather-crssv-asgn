@@ -2,12 +2,12 @@ package com.crossover.trial.weather.exception;
 
 /**
  * An internal exception marker
- *
+ * <p>
  * Why need to extends RuntimeException?
- *  Because DoNotChangeTest not allow to modified the Endpoints API including adding checking
- *  exception into the method signal. Extending RuntimeException would help to workaround this.
- *
- *  The ideal implementation should be extending the checked Exception.
+ * Because DoNotChangeTest not allow to modified the Endpoints API including adding checking
+ * exception into the method signal. Extending RuntimeException would help to workaround this.
+ * <p>
+ * The ideal implementation should be extending the checked Exception.
  */
 public class WeatherException extends RuntimeException {
     private ErrorCode errorCode;

@@ -22,8 +22,11 @@ public class DataPoint {
 
     private int count = 0;
 
-    /** private constructor, use the builder to create this object */
-    private DataPoint() { }
+    /**
+     * private constructor, use the builder to create this object
+     */
+    private DataPoint() {
+    }
 
     protected DataPoint(int first, int second, double mean, int third, int count) {
         this.setFirst(first);
@@ -33,14 +36,20 @@ public class DataPoint {
         this.setCount(count);
     }
 
-    /** the mean of the observations */
+    /**
+     * the mean of the observations
+     */
     public double getMean() {
         return mean;
     }
 
-    public void setMean(double mean) { this.mean = mean; }
+    public void setMean(double mean) {
+        this.mean = mean;
+    }
 
-    /** 1st quartile -- useful as a lower bound */
+    /**
+     * 1st quartile -- useful as a lower bound
+     */
     public int getFirst() {
         return first;
     }
@@ -49,7 +58,9 @@ public class DataPoint {
         this.first = first;
     }
 
-    /** 2nd quartile -- median value */
+    /**
+     * 2nd quartile -- median value
+     */
     public int getSecond() {
         return second;
     }
@@ -58,7 +69,9 @@ public class DataPoint {
         this.second = second;
     }
 
-    /** 3rd quartile value -- less noisy upper value */
+    /**
+     * 3rd quartile value -- less noisy upper value
+     */
     public int getThird() {
         return third;
     }
@@ -67,7 +80,9 @@ public class DataPoint {
         this.third = third;
     }
 
-    /** the total number of measurements */
+    /**
+     * the total number of measurements
+     */
     public int getCount() {
         return count;
     }
@@ -97,10 +112,11 @@ public class DataPoint {
         int last;
         int count;
 
-        public Builder() { }
+        public Builder() {
+        }
 
         public Builder withFirst(int first) {
-            this.first= first;
+            this.first = first;
             return this;
         }
 

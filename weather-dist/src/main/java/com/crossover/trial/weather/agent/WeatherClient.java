@@ -32,7 +32,7 @@ public class WeatherClient {
         System.out.println("query." + iata + "." + radius + ": " + response.readEntity(String.class));
     }
 
-    public void populate(String pointType, int first, int last, int mean, int median, int count) {
+    public void populate(String iataCode, String pointType, int first, int last, int mean, int median, int count) {
         DataPoint dataPoint = new DataPoint.Builder()
                 .withFirst(first)
                 .withLast(last)
@@ -40,8 +40,8 @@ public class WeatherClient {
                 .withMedian(median)
                 .withCount(count)
                 .build();
-        Response post = client.addWeather("BOS", pointType, dataPoint);
-        System.out.println("collect.weather: " + post.readEntity(String.class));
+        Response post = client.addWeather(iataCode, pointType, dataPoint);
+        System.out.println(String.format("update.weather: %1$s: %2$s", dataPoint, post.readEntity(String.class)));
     }
 
     public void pingQuery() {
@@ -59,7 +59,7 @@ public class WeatherClient {
         double weatherRadius = 0;
 
         weatherClient.pingCollect();
-        weatherClient.populate("wind", 0, 10, 6, 4, 20);
+        weatherClient.populate("BOS", "wind", 0, 10, 6, 4, 20);
         weatherClient.pingQuery();
 
         weatherClient.query("BOS", weatherRadius);
@@ -69,8 +69,14 @@ public class WeatherClient {
         weatherClient.query("MMU", weatherRadius);
         weatherClient.pingQuery();
 
+        weatherRadius = 40;
+        weatherClient.populate("JFK", "humidity", 0, 10, 6, 4, 20);
+        weatherClient.query("EWR", weatherRadius);
+        weatherClient.query("LGA", weatherRadius);
+        weatherClient.query("MMU", weatherRadius);
+        weatherClient.pingQuery();
+
         weatherClient.exit();
         System.out.print("complete");
-        System.exit(0);
     }
 }

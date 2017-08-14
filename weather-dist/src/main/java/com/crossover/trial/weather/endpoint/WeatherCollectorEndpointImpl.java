@@ -14,7 +14,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static com.crossover.trial.weather.configuration.AppConfig.SERVER_STOP;
 
@@ -27,8 +26,6 @@ import static com.crossover.trial.weather.configuration.AppConfig.SERVER_STOP;
 
 @Path("/collect")
 public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
-    public final static Logger LOGGER = Logger.getLogger(WeatherCollectorEndpointImpl.class.getName());
-
     private final WeatherService collectorService;
 
     private final AirportService airportService;
@@ -47,7 +44,6 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
     @GET
     @Path("/ping")
     public Response ping() {
-        LOGGER.info("Ping collect endpoint");
         return Response
                 .status(Response.Status.OK)
                 .entity("1")
@@ -68,7 +64,6 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
     public Response updateWeather(@PathParam("iata") String iataCode,
                                   @PathParam("pointType") String pointType,
                                   String dataPoint) throws WeatherException {
-        LOGGER.info("Call to add weather endpoint");
         collectorService.addDataPoint(iataCode, pointType, JSONHelper.fromJson(dataPoint, DataPoint.class));
         return Response.status(Response.Status.OK).entity("OK").build();
     }
@@ -82,7 +77,6 @@ public class WeatherCollectorEndpointImpl implements WeatherCollectorEndpoint {
     @Path("/airports")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAirports() {
-        LOGGER.info("Call to get airports endpoint");
         Set<String> airports = airportService.getAllAirportCodes();
         return Response.status(Response.Status.OK).entity(airports).build();
     }

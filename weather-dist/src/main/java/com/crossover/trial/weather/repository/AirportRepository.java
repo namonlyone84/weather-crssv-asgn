@@ -14,7 +14,7 @@ public interface AirportRepository {
      */
     Airport findAirport(String iataCode);
 
-    boolean exist(String iataCode);
+    boolean isExist(String iataCode);
 
     List<Airport> findAll();
 
